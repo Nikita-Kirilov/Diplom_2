@@ -17,15 +17,11 @@ public class CreateUserTest {
     private UserApi userApi;
     private String acessToken;
 
-    private static final boolean keySuccessExpected = true;
-    private static final boolean keySuccessFalseExpected = false;
+    private static final boolean KEY_SUCCESS_EXPECTED = true;
+    private static final boolean KEY_SUCCESS_FALSE_EXPECTED = false;
 
-    private static final String messageAlreadyExists = "User already exists";
-    private static final String messageFieldRequired = "Email, password and name are required fields";
-    @Before
-    public void setUp() {
-        RestAssured.baseURI= UrlConstants.BASE_URI;
-    }
+    private static final String MESSAGE_ALREADY_EXISTS = "User already exists";
+    private static final String MESSAGE_FIELD_REQUIRED = "Email, password and name are required fields";
     @After
     public void teardown() {
         //Удаление пользователя
@@ -45,7 +41,7 @@ public class CreateUserTest {
         Response response = userApi.postCreateUser(user);
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
         boolean successActual = response.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
 
         acessToken = response.path("accessToken");
         acessToken = acessToken.substring(7);
@@ -73,9 +69,9 @@ public class CreateUserTest {
         Response responseSameUser = userApi.postCreateUser(user);
         assertEquals("Неверный статус код", SC_FORBIDDEN, responseSameUser.statusCode());
         boolean successActual = responseSameUser.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseSameUser.path("message");
-        assertEquals("Некорректый ответ в Body message", messageAlreadyExists, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_ALREADY_EXISTS, messageActual);
 
     }
 
@@ -91,9 +87,9 @@ public class CreateUserTest {
         Response response = userApi.postCreateUser(user);
         assertEquals("Неверный статус код", SC_FORBIDDEN, response.statusCode());
         boolean successActual = response.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = response.path("message");
-        assertEquals("Некорректый ответ в Body message", messageFieldRequired, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_FIELD_REQUIRED, messageActual);
     }
 
     @Test
@@ -108,9 +104,9 @@ public class CreateUserTest {
         Response response = userApi.postCreateUser(user);
         assertEquals("Неверный статус код", SC_FORBIDDEN, response.statusCode());
         boolean successActual = response.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = response.path("message");
-        assertEquals("Некорректый ответ в Body message", messageFieldRequired, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_FIELD_REQUIRED, messageActual);
     }
 
     @Test
@@ -125,9 +121,9 @@ public class CreateUserTest {
         Response response = userApi.postCreateUser(user);
         assertEquals("Неверный статус код", SC_FORBIDDEN, response.statusCode());
         boolean successActual = response.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = response.path("message");
-        assertEquals("Некорректый ответ в Body message", messageFieldRequired, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_FIELD_REQUIRED, messageActual);
     }
 
 }

@@ -15,14 +15,11 @@ public class LoginUserTest {
     private UserApi userApi;
     private String acessToken;
 
-    private static final boolean keySuccessExpected = true;
-    private static final boolean keySuccessFalseExpected = false;
+    private static final boolean KEY_SUCCESS_EXPECTED = true;
+    private static final boolean KEY_SUCCESS_FALSE_EXPECTED = false;
 
-    private static final String messageUnauthorized = "email or password are incorrect";
-    @Before
-    public void setUp() {
-        RestAssured.baseURI= UrlConstants.BASE_URI;
-    }
+    private static final String MESSAGE_UNAUTHORIZED = "email or password are incorrect";
+
     @After
     public void teardown() {
         //Удаление пользователя
@@ -48,7 +45,7 @@ public class LoginUserTest {
         Response responseLogin = userApi.loginUser(user);
         assertEquals("Неверный статус код", SC_OK, responseLogin.statusCode());
         boolean successActual = responseLogin.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
     }
 
     @Test
@@ -65,9 +62,9 @@ public class LoginUserTest {
         Response responseLogin = userApi.loginUser(user);
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseLogin.statusCode());
         boolean successActual = responseLogin.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseLogin.path("message");
-        assertEquals("Некорректый ответ в Body message", messageUnauthorized, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_UNAUTHORIZED, messageActual);
     }
 
     @Test
@@ -94,9 +91,9 @@ public class LoginUserTest {
         Response responseLogin = userApi.loginUser(userWithoutEmail);
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseLogin.statusCode());
         boolean successActual = responseLogin.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseLogin.path("message");
-        assertEquals("Некорректый ответ в Body message", messageUnauthorized, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_UNAUTHORIZED, messageActual);
     }
 
     @Test
@@ -123,8 +120,8 @@ public class LoginUserTest {
         Response responseLogin = userApi.loginUser(userWithoutPassword);
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseLogin.statusCode());
         boolean successActual = responseLogin.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseLogin.path("message");
-        assertEquals("Некорректый ответ в Body message", messageUnauthorized, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_UNAUTHORIZED, messageActual);
     }
 }

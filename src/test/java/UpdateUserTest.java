@@ -16,14 +16,11 @@ public class UpdateUserTest {
     private UserApi userApi;
     private String acessToken;
 
-    private static final boolean keySuccessExpected = true;
-    private static final boolean keySuccessFalseExpected = false;
+    private static final boolean KEY_SUCCESS_EXPECTED = true;
+    private static final boolean KEY_SUCCESS_FALSE_EXPECTED = false;
 
-    private static final String messageUnauthorized = "You should be authorised";
-    @Before
-    public void setUp() {
-        RestAssured.baseURI= UrlConstants.BASE_URI;
-    }
+    private static final String MESSAGE_UNAUTHORIZED = "You should be authorised";
+
     @After
     public void teardown() {
         //Удаление пользователя
@@ -58,7 +55,7 @@ public class UpdateUserTest {
         Response responseUpdate = userApi.patchUser(acessToken,userUpdateEmail);
         assertEquals("Неверный статус код", SC_OK, responseUpdate.statusCode());
         boolean successActual = responseUpdate.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
         String newEmailActual = responseUpdate.path("user.email");
         assertEquals("Не обновился email ответа Body", userNewEmail, newEmailActual);
     }
@@ -91,7 +88,7 @@ public class UpdateUserTest {
         Response responseUpdate = userApi.patchUser(acessToken,userUpdateName);
         assertEquals("Неверный статус код", SC_OK, responseUpdate.statusCode());
         boolean successActual = responseUpdate.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
         String newNameActual = responseUpdate.path("user.name");
         assertEquals("Не обновился name ответа Body", userNewName, newNameActual);
     }
@@ -124,7 +121,7 @@ public class UpdateUserTest {
         Response responseUpdate = userApi.patchUser(acessToken,userUpdatePassword);
         assertEquals("Неверный статус код", SC_OK, responseUpdate.statusCode());
         boolean successActual = responseUpdate.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
     }
 
     @Test
@@ -155,9 +152,9 @@ public class UpdateUserTest {
         Response responseUpdate = userApi.patchUserNoAuth(userUpdateName);
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseUpdate.statusCode());
         boolean successActual = responseUpdate.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseUpdate.path("message");
-        assertEquals("Неверный текст message Body", messageUnauthorized, messageActual);
+        assertEquals("Неверный текст message Body", MESSAGE_UNAUTHORIZED, messageActual);
     }
 
     @Test
@@ -188,9 +185,9 @@ public class UpdateUserTest {
         Response responseUpdate = userApi.patchUserNoAuth(userUpdateEmail);
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseUpdate.statusCode());
         boolean successActual = responseUpdate.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseUpdate.path("message");
-        assertEquals("Неверный текст message Body", messageUnauthorized, messageActual);
+        assertEquals("Неверный текст message Body", MESSAGE_UNAUTHORIZED, messageActual);
     }
 
     @Test
@@ -221,8 +218,8 @@ public class UpdateUserTest {
         Response responseUpdate = userApi.patchUserNoAuth(userUpdatePassword);
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseUpdate.statusCode());
         boolean successActual = responseUpdate.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseUpdate.path("message");
-        assertEquals("Неверный текст message Body", messageUnauthorized, messageActual);
+        assertEquals("Неверный текст message Body", MESSAGE_UNAUTHORIZED, messageActual);
     }
 }

@@ -22,15 +22,10 @@ public class GetUserOrdersTest {
     private OrderApi orderApi;
     private String acessToken;
 
-    private static final boolean keySuccessExpected = true;
-    private static final boolean keySuccessFalseExpected = false;
+    private static final boolean KEY_SUCCESS_EXPECTED = true;
+    private static final boolean KEY_SUCCESS_FALSE_EXPECTED = false;
 
-    private static final String messageNonAuth = "You should be authorised";
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = UrlConstants.BASE_URI;
-    }
+    private static final String MESSAGE_NON_AUTH = "You should be authorised";
 
     @After
     public void teardown() {
@@ -68,7 +63,7 @@ public class GetUserOrdersTest {
         Response responseGetOrder = orderApi.getOrderwithAuth(acessToken);
         assertEquals("Неверный статус код", SC_OK, responseGetOrder.statusCode());
         boolean successActual = responseGetOrder.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
         int totalActual = responseGetOrder.path("total");
         int totalTodayActual = responseGetOrder.path("totalToday");
         int totalAndTotalTodayExpected=1;
@@ -86,8 +81,8 @@ public class GetUserOrdersTest {
         Response responseGetOrder = orderApi.getOrderwithoutAuth();
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, responseGetOrder.statusCode());
         boolean successActual = responseGetOrder.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = responseGetOrder.path("message");
-        assertEquals("Некорректый ответ в Body message", messageNonAuth, messageActual);
+        assertEquals("Некорректый ответ в Body message", MESSAGE_NON_AUTH, messageActual);
     }
 }

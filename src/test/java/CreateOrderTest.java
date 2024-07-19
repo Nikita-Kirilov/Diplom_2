@@ -1,9 +1,11 @@
 import com.github.javafaker.Faker;
+import config.AppConfig;
 import data.CreateUser;
 import data.Order;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.aeonbits.owner.ConfigFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,15 +23,10 @@ public class CreateOrderTest {
     private OrderApi orderApi;
     private String acessToken;
 
-    private static final boolean keySuccessExpected = true;
-    private static final boolean keySuccessFalseExpected = false;
+    private static final boolean KEY_SUCCESS_EXPECTED = true;
+    private static final boolean KEY_SUCCESS_FALSE_EXPECTED = false;
 
-    private static final String messageNonIngredients = "Ingredient ids must be provided";
-
-    @Before
-    public void setUp() {
-        RestAssured.baseURI = UrlConstants.BASE_URI;
-    }
+    private static final String MESSAGE_NON_INGREDIENTS = "Ingredient ids must be provided";
 
     @After
     public void teardown() {
@@ -43,8 +40,11 @@ public class CreateOrderTest {
         userApi = new UserApi();
         orderApi = new OrderApi();
         List<String> ingredientsForOrder = new ArrayList<>();
-        ingredientsForOrder.add("61c0c5a71d1f82001bdaaa6d");
-        ingredientsForOrder.add("61c0c5a71d1f82001bdaaa79");
+
+        Response responseIngredients = orderApi.getIngredients();
+
+        ingredientsForOrder.add(responseIngredients.path("data[0]._id"));
+        ingredientsForOrder.add(responseIngredients.path("data[1]._id"));
 
         Order order = new Order();
         order.setIngredients(ingredientsForOrder);
@@ -52,7 +52,7 @@ public class CreateOrderTest {
         Response response = orderApi.postCreateOrder(order);
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
         boolean successActual = response.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
 
     }
 
@@ -69,8 +69,11 @@ public class CreateOrderTest {
                 .withName(faker.name().firstName());
 
         List<String> ingredientsForOrder = new ArrayList<>();
-        ingredientsForOrder.add("61c0c5a71d1f82001bdaaa6d");
-        ingredientsForOrder.add("61c0c5a71d1f82001bdaaa79");
+
+        Response responseIngredients = orderApi.getIngredients();
+
+        ingredientsForOrder.add(responseIngredients.path("data[0]._id"));
+        ingredientsForOrder.add(responseIngredients.path("data[1]._id"));
 
         Order order = new Order();
         order.setIngredients(ingredientsForOrder);
@@ -82,7 +85,7 @@ public class CreateOrderTest {
         Response responseOrder = orderApi.postCreateOrderwithAuth(acessToken, order);
         assertEquals("Неверный статус код", SC_OK, responseOrder.statusCode());
         boolean successActual = responseOrder.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_EXPECTED, successActual);
         String ownerNameActual = responseOrder.path("order.owner.name");
         assertEquals("Некорректый ответ в Body owner.name", user.getName(), ownerNameActual);
         String ownerEmailActual = responseOrder.path("order.owner.email");
@@ -102,18 +105,19 @@ public class CreateOrderTest {
         Response response = orderApi.postCreateOrder(order);
         assertEquals("Неверный статус код", SC_BAD_REQUEST, response.statusCode());
         boolean successActual = response.path("success");
-        assertEquals("Некорректый ответ в Body success", keySuccessFalseExpected, successActual);
+        assertEquals("Некорректый ответ в Body success", KEY_SUCCESS_FALSE_EXPECTED, successActual);
         String messageActual = response.path("message");
-        assertEquals("Некорректый ответ в Body success", messageNonIngredients, messageActual);
+        assertEquals("Некорректый ответ в Body success", MESSAGE_NON_INGREDIENTS, messageActual);
     }
 
     @Test
     @DisplayName("Проверка создания заказа с некорректным хэшем ингридиентов. 500")
     public void createOrderWithIncorrectHash() {
+        String invalidHashCode="61c0c5a71";
         userApi = new UserApi();
         orderApi = new OrderApi();
         List<String> ingredientsForOrder = new ArrayList<>();
-        ingredientsForOrder.add("61c0c5a71");
+        ingredientsForOrder.add(invalidHashCode);
 
         Order order = new Order();
         order.setIngredients(ingredientsForOrder);
